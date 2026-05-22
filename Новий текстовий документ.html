@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoGloss — Premium Automotive Paint Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS ЗМІННІ ТА СТИЛІ */
+        :root {
+            /* Оновлена палітра: глибокий темно-синій та неоновий блакитний акцент */
+            --primary: #00f0ff; 
+            --bg-dark: #0a1128;
+            --bg-glass: rgba(13, 27, 42, 0.85);
+            --text: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--text);
+        }
+
+        /* НАВІГАЦІЯ */
+        header {
+            background: rgba(6, 11, 25, 0.95);
+            padding: 10px 5%; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Стиль для контейнера логотипа */
+        .logo { 
+            display: flex;
+            align-items: center;
+            text-decoration: none; 
+            transition: 0.3s;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+
+        /* Стиль для картинки логотипа */
+        .logo img {
+            max-height: 80px; 
+            width: auto;
+            display: block;
+        }
+
+        .lang-zone { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 14px; }
+        .switch { position: relative; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #1e293b; border-radius: 22px; transition: 0.4s; border: 1px solid rgba(0, 240, 255, 0.3); }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 4px; bottom: 3px; background: white; border-radius: 50%; transition: 0.4s; }
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); background: #0a1128; }
+
+        nav a { color: white; text-decoration: none; margin-left: 20px; text-transform: uppercase; font-size: 13px; font-weight: 600; transition: 0.3s; }
+        nav a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+
+        /* ЛОГІКА ПЕРЕКЛЮЧЕННЯ СТОРІНОК */
+        section { display: none; padding: 60px 10%; min-height: 100vh; animation: fadeIn 0.6s ease; }
+        section:target { display: block; }
+        #home:not(:target) { display: block; } 
+        body:has(section:target) #home:not(:target) { display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .container { background: var(--bg-glass); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 30px; padding: 50px; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        /* Стилізація заголовків шрифтом Courier */
+        h1, h2, h3, h4 { 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+        }
+        
+        /* Застосовуємо Courier для всіх мовних версій заголовків */
+        [data-lang="en"] h1, [data-lang="en"] h2, [data-lang="en"] h3, [data-lang="en"] h4,
+        h1[data-lang="en"], h2[data-lang="en"], h3[data-lang="en"], h4[data-lang="en"],
+        [data-lang="uk"] h1, [data-lang="uk"] h2, [data-lang="uk"] h3, [data-lang="uk"] h4,
+        h1[data-lang="uk"], h2[data-lang="uk"], h3[data-lang="uk"], h4[data-lang="uk"] {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        p { font-size: 18px; line-height: 1.8; margin-bottom: 25px; text-align: justify; color: #cbd5e1; }
+        
+        /* Стилізація списків послуг */
+        ul { list-style: none; padding: 0; }
+        ul li { position: relative; padding-left: 25px; margin-bottom: 12px; font-size: 16px; color: #cbd5e1; }
+        ul li::before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: bold; }
+
+        /* ЕЛЕМЕНТИ */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; margin: 40px 0; }
+        .img-box { width: 100%; border-radius: 20px; border: 2px solid var(--primary); transition: 0.5s; }
+        .img-box:hover { transform: scale(1.02); box-shadow: 0 0 25px var(--primary); }
+
+        table { width: 100%; border-collapse: collapse; margin: 30px 0; background: rgba(0,0,0,0.2); border-radius: 10px; overflow: hidden; }
+        th, td { border: 1px solid rgba(0, 240, 255, 0.2); padding: 15px; text-align: left; }
+        th { background: rgba(0, 240, 255, 0.1); color: var(--primary); font-weight: 700; }
+
+        form input, form select, form textarea { width: 100%; padding: 15px; margin-bottom: 15px; background: rgba(6, 11, 25, 0.8); border: 1px solid rgba(0, 240, 255, 0.4); color: white; border-radius: 10px; font-family: inherit; }
+        form input:focus, form select:focus, form textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+        
+        .btn { padding: 15px 40px; background: var(--primary); color: #0a1128; border: none; border-radius: 50px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.3s; text-decoration: none; display: inline-block; letter-spacing: 1px; }
+        .btn:hover { box-shadow: 0 0 25px var(--primary); transform: scale(1.05); }
+
+        /* ПЕРЕМИКАЧ МОВИ */
+        [data-lang="en"] { display: none; }
+        body.en-active [data-lang="uk"] { display: none; }
+        body.en-active [data-lang="en"] { display: block; }
+    </style>
+</head>
+<body id="mainBody">
+
+    <header>
+        <a href="#home" class="logo">
+            <img src="лого.png" alt="AutoGloss Logo">
+        </a>
+        <div style="display: flex; align-items: center; gap: 30px;">
+            <div class="lang-zone">
+                UA <label class="switch"><input type="checkbox" id="langTog" onchange="toggleL()"><span class="slider"></span></label> EN
+            </div>
+            <nav>
+                <a href="#home">Головна</a>
+                <a href="#catalog">Каталог</a>
+                <a href="#services">Послуги</a>
+                <a href="#about">Про нас</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home">
+        <div class="container">
+            <h1 data-lang="uk">Світ Бездоганного Блиску</h1>
+            <h1 data-lang="en">World of Flawless Gloss</h1>
+            
+            <p data-lang="uk">Ласкаво просимо до AutoGloss — вашого провідника у світі бездоганного стилю, глянцевого блиску та автомобільної естетики. Наша місія полягає у створенні унікального вигляду для кожного авто, власник якого прагне досконалості в кожній деталі. Ми об'єднуємо передові технології фарбування з ювелірною точністю колористики, щоб кожен виїзд вашого автомобіля приковував погляди та перетворювався на подію.</p>
+            <p data-lang="en">Welcome to AutoGloss — your guide to the world of impeccable style, glossy shine, and automotive aesthetics. Our mission is to create a unique look for every car whose owner strives for perfection in every detail. We combine advanced painting technologies with jewelry-accurate coloring, so that each layout of your vehicle rivets glances and turns into an event.</p>
+            
+            <div class="grid">
+                <video width="100%" height="350" controls style="border: 2px solid var(--primary); border-radius: 20px; object-fit: cover;">
+                    <source src="відео.mp4" type="video/mp4">
+                    Ваш браузер не підтримує відео.
+                </video>
+                
+                <div>
+                    <h3 data-lang="uk">Наші Технології</h3>
+                    <h3 data-lang="en">Our Technologies</h3>
+                    <p data-lang="uk">Ми впроваджуємо системи комп'ютерного підбору кольору та використовуємо преміальні італійські камери замкнутого циклу, що забезпечують заводську якість покриття без жодної пилинки. Кожен шар фарби та лаку наноситься за суворими німецькими стандартами з використанням інноваційних композитних матеріалів для максимального захисту кузова.</p>
+                    <p data-lang="en">We implement computerized color matching systems and use premium Italian closed-loop spray booths that ensure factory coating quality without a single speck of dust. Each layer of paint and varnish is applied according to strict German standards using innovative composite materials for maximum body protection.</p>
+                    <img src="гівка.gif" class="img-box" style="height: 180px; object-fit: cover;" alt="Drive Animation">
+                </div>
+            </div>
+
+            <p data-lang="uk">Ми пишаємося тим, що можемо запропонувати нашим клієнтам повний спектр послуг: від локального усунення подряпин і комп'ютерного підбору ексклюзивних відтінків до повного перефарбування кузова та нанесення захисного преміум-покриття. Приєднуйтесь до світу бездоганного блиску разом з AutoGloss.</p>
+            <p data-lang="en">We pride ourselves on being able to offer our clients a full range of services: from local scratch removal and computer selection of exclusive shades to complete body repainting and application of protective premium coatings. Join the world of flawless shine with AutoGloss.</p>
+        </div>
+    </section>
+
+    <section id="catalog">
+        <div class="container">
+            <h2 data-lang="uk">Ексклюзивний Каталог</h2>
+            <h2 data-lang="en">Exclusive Catalog</h2>
+            
+            <table data-lang="uk">
+                <tr>
+                    <th>Тип покриття / Особливості</th>
+                    <th>За 1 елемент</th>
+                    <th>Легкове авто (повне)</th>
+                    <th>Вантажне авто (грузові)</th>
+                    <th>Гарантія</th>
+                </tr>
+                <tr>
+                    <td><b>Дзеркальний Глянець</b><br><small>Преміальний керамолак, захист від сколів</small></td>
+                    <td>від $100</td>
+                    <td>від $1200</td>
+                    <td>від $2500</td>
+                    <td>5 років</td>
+                </tr>
+                <tr>
+                    <td><b>Глибокий Мат (Satin)</b><br><small>Ефект шовковистості, стійкість до ультрафіолету</small></td>
+                    <td>від $130</td>
+                    <td>від $1500</td>
+                    <td>від $3100</td>
+                    <td>4 роки</td>
+                </tr>
+                <tr>
+                    <td><b>Ексклюзивний Хамелеон</b><br><small>Зміна відтінку під різним кутом світла</small></td>
+                    <td>від $200</td>
+                    <td>від $2200</td>
+                    <td>від $4500</td>
+                    <td>3 роки</td>
+                </tr>
+            </table>
+
+            <table data-lang="en">
+                <tr>
+                    <th>Coating Type / Features</th>
+                    <th>Per 1 Element</th>
+                    <th>Passenger Car (Full)</th>
+                    <th>Trucks & Commercial</th>
+                    <th>Warranty</th>
+                </tr>
+                <tr>
+                    <td><b>Mirror Gloss</b><br><small>Premium ceramic clear coat, chip protection</small></td>
+                    <td>from $100</td>
+                    <td>from $1200</td>
+                    <td>from $2500</td>
+                    <td>5 years</td>
+                </tr>
+                <tr>
+                    <td><b>Deep Matte (Satin)</b><br><small>Silk effect, premium UV resistance</small></td>
+                    <td>from $130</td>
+                    <td>from $1500</td>
+                    <td>from $3100</td>
+                    <td>4 years</td>
+                </tr>
+                <tr>
+                    <td><b>Exclusive Chameleon</b><br><small>Color shift depending on light angle</small></td>
+                    <td>from $200</td>
+                    <td>from $2200</td>
+                    <td>from $4500</td>
+                    <td>3 years</td>
+                </tr>
+            </table>
+
+            <h3 data-lang="uk">Локація та Наші Роботи</h3>
+            <h3 data-lang="en">Our Location & Works</h3>
+            
+            <div class="grid">
+                <div style="background: rgba(6, 11, 25, 0.4); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 240, 255, 0.2); text-align: center;">
+                    <h4 style="margin-top: 0;" data-lang="uk">Приклад нашої роботи</h4>
+                    <h4 style="margin-top: 0;" data-lang="en">Our Work Example</h4>
+                    <p style="font-size: 14px; text-align: center; margin-bottom: 15px;" data-lang="uk">Преміальне нанесення лаку із захистом від сколів</p>
+                    <p style="font-size: 14px; text-align: center; margin-bottom: 15px;" data-lang="en">Premium clear coat application with chip protection</p>
+                    <img src="https://images.unsplash.com/photo-1617469767053-d3b508a0d84d?auto=format&fit=crop&w=500&q=80" class="img-box" style="height: 200px; object-fit: cover;" alt="Our Work">
+                </div>
+                
+                <div style="background: rgba(6, 11, 25, 0.4); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 240, 255, 0.2);">
+                    <h4 style="margin-top: 0; text-align: center;" data-lang="uk">Як нас знайти</h4>
+                    <h4 style="margin-top: 0; text-align: center;" data-lang="en">Find Us Here</h4>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d41334.62939987823!2d25.55622085790696!3d49.55219495034685!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47303152579df643%3A0x6bbfda30a7d5ea34!2z0KLQtdGA0L3QvtC_0ZbQu9GMLCDQotC10YDQvdC_0L7Qu9GMINGB0YzQutCwINC-0LHQuy4sIDQ2MDAx!5e0!3m2!1suk!2sua!4v1715878000000!5m2!1suk!2sua" 
+                        width="100%" 
+                        height="200" 
+                        style="border: 2px solid var(--primary); border-radius: 15px; background: none;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2 data-lang="uk">Послуги та Сервіс</h2>
+            <h2 data-lang="en">Services & Support</h2>
+            
+            <div class="grid">
+                <div>
+                    <h3 data-lang="uk">Напрямки роботи:</h3>
+                    <h3 data-lang="en">Key services:</h3>
+                    
+                    <ul data-lang="uk">
+                        <li>Локальне відновлення ЛКП та малярка</li>
+                        <li>Повне перефарбування кузова будь-якої складності</li>
+                        <li>Професійний комп'ютерний підбір кольору</li>
+                        <li>Детейлінг-полірування та нанесення нанокераміки</li>
+                        <li>Видалення вм'ятин без фарбування за технологією PDR</li>
+                        <li>Реставрація, ремонт та фарбування автомобільних дисків</li>
+                        <li>Обклеювання кузова захисною антигравійною бронеплівкою</li>
+                    </ul>
+                    
+                    <ul data-lang="en">
+                        <li>Local paint restoration and spot painting</li>
+                        <li>Complete vehicle repainting of any complexity</li>
+                        <li>Professional computerized color matching</li>
+                        <li>Detailing polishing and nanoceramic coating</li>
+                        <li>Paintless Dent Repair (PDR technology)</li>
+                        <li>Restoration, repair, and painting of alloy wheels</li>
+                        <li>Body wrapping with protective anti-chip paint protection film</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 data-lang="uk" style="text-align: center;">Подати заявку</h3>
+                    <h3 data-lang="en" style="text-align: center;">Submit Request</h3>
+                    
+                    <form>
+                        <input type="text" placeholder="Ваше Ім'я / Your Name" required>
+                        <select required>
+                            <option value="" disabled selected data-lang="uk">Оберіть послугу сервісу</option>
+                            <option value="" disabled selected data-lang="en">Choose service</option>
+                            <option>Локальне фарбування / Local Painting</option>
+                            <option>Повне перефарбування / Full Repaint</option>
+                            <option>Комп'ютерний підбір кольору / Color Matching</option>
+                            <option>Полірування та Кераміка / Polishing & Ceramic</option>
+                            <option>Видалення вм'ятин PDR / Paintless Dent Repair</option>
+                            <option>Захисна бронеплівка / Paint Protection Film</option>
+                        </select>
+                        <textarea rows="4" placeholder="Опишіть стан кузова або пошкодження / Message"></textarea>
+                        <button type="submit" class="btn" style="width: 100%;" data-lang="uk">Відправити замовлення</button>
+                        <button type="submit" class="btn" style="width: 100%;" data-lang="en">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container" style="text-align: center;">
+            <h2 data-lang="uk">Про нас</h2>
+            <h2 data-lang="en">About Us</h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png" width="140" alt="Team Avatar">
+            
+            <h2 data-lang="uk" style="color:white; margin:15px 0; font-family: 'Courier New', Courier, monospace; font-weight: 700;">Команда Професіоналів AutoGloss</h2>
+            <h2 data-lang="en" style="color:white; margin:15px 0; font-family: 'Courier New', Courier, monospace; font-weight: 700;">AutoGloss Professional Team</h2>
+            
+            <p data-lang="uk">Ми — сертифіковані майстри своєї справи, які щиро закохані в автомобільну естетику. Багаторічний досвід роботи в індустрії преміального автофарбування та кузовного ремонту дозволяє нам успішно реалізовувати найскладніші та найамбітніші проєкти. Ми не просто фарбуємо автомобілі — ми гарантуємо <b>ідеальну заводську якість покриття</b>, бездоганний підбір відтінків та довговічний результат, яким ви будете пишатися щодня.</p>
+            <p data-lang="en">We are certified masters of our craft, truly passionate about automotive aesthetics. Years of experience in the premium car painting and body repair industry allow us to successfully implement the most complex and ambitious projects. We don't just paint cars — we guarantee <b>flawless factory coating quality</b>, perfect color matching, and a durable result that you will be proud of every single day.</p>
+            
+            <a href="#home" class="btn" data-lang="uk">На Головну</a>
+            <a href="#home" class="btn" data-lang="en">To Home</a>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 50px; background: #060b19; border-top: 2px solid var(--primary); margin-top: 50px;">
+        <p>© 2026 AutoGloss. All Rights Reserved. <a href="https://topgear.com" target="_blank" style="color:var(--primary); text-decoration: none;">Top Gear Resource</a></p>
+    </footer>
+
+    <script>
+        function toggleL() {
+            const b = document.getElementById('mainBody');
+            const ch = document.getElementById('langTog');
+            if (ch.checked) {
+                b.classList.add('en-active');
+            } else {
+                b.classList.remove('en-active');
+            }
+        }
+
+        window.onload = function() {
+            if(!window.location.hash) {
+                window.location.hash = 'home';
+            }
+        };
+    </script>
+</body>
+</html>
